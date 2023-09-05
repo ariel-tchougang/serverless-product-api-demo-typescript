@@ -1,0 +1,134 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-helloworld-typescript
+
+  Sample SAM Template for sam-helloworld-typescript
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs16.x
+    Tracing: Active
+  Api:
+    TracingEnabled: true
+Resources:              
+  LambdaLoggingPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Allows basic logging actions for Lambda functions
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Sid: AllowBasicLoggingActions
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: '*'
+            
+  AWSXrayWriteOnlyPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Allows X-Ray write access
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Sid: AWSXrayWriteOnlyAccess
+            Action:
+              - xray:PutTraceSegments
+              - xray:PutTelemetryRecords
+              - xray:GetSamplingRules
+              - xray:GetSamplingTargets
+              - xray:GetSamplingStatisticSummaries
+            Resource: '*'
+            
+  ProductApiFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      # RoleName: ProductApiFunctionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Ref LambdaLoggingPolicy
+        - !Ref AWSXrayWriteOnlyPolicy
+  ProductApiFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+      Handler: src/adapters/in/handlers/productApiHandler
+      Description: A simple Product Api CRUD function
+      Role: !GetAtt ProductApiFunctionRole.Arn
+      Architectures:
+      - x86_64
+      Events:
+        GetAll:
+          Type: Api
+          Properties:
+            Path: /products
+            Method: GET
+        GetOne:
+          Type: Api
+          Properties:
+            Path: /products/{id}
+            Method: GET
+        CreateItem:
+          Type: Api
+          Properties:
+            Path: /products
+            Method: POST
+        UpdateItem:
+          Type: Api
+          Properties:
+            Path: /products/{id}
+            Method: PUT
+        DeleteItem:
+          Type: Api
+          Properties:
+            Path: /products/{id}
+            Method: DELETE
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+        - src/adapters/in/handlers/productApiHandler.ts
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  ProductApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  ProductApiFunction:
+    Description: Hello World Lambda Function ARN
+    Value: !GetAtt ProductApiFunction.Arn
+  ProductApiFunctionRole:
+    Description: Implicit IAM Role created for Product Api function
+    Value: !GetAtt ProductApiFunctionRole.Arn
