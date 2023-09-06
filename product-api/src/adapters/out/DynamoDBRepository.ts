@@ -18,7 +18,7 @@ export class DynamoDBRepository extends ProductRepository {
       Item: product,
     };
     const response = await documentClient.send(new PutCommand(params));
-    console.log(response);
+    console.log('PutCommand response: ', response);
     return product;
   }
 
@@ -28,7 +28,7 @@ export class DynamoDBRepository extends ProductRepository {
       Key: { id },
     };
     const response = await documentClient.send(new GetCommand(params));
-    console.log(response);
+    console.log('GetCommand response: ', response);
     return response.Item as Product || null;
   }
 
@@ -46,7 +46,7 @@ export class DynamoDBRepository extends ProductRepository {
       ReturnValues: "ALL_NEW",
     };
     const response = await documentClient.send(new UpdateCommand(params));
-    console.log(response);
+    console.log('UpdateCommand response: ', response);
     return {id, name: product.name}  as Product;
   }
 
@@ -57,7 +57,7 @@ export class DynamoDBRepository extends ProductRepository {
     };
     
     const response = await documentClient.send(new DeleteCommand(params));
-    console.log(response);
+    console.log('DeleteCommand response: ', response);
   }
 
   async findAll(): Promise<Product[] | undefined> {
@@ -65,7 +65,7 @@ export class DynamoDBRepository extends ProductRepository {
       TableName: tableName,
     };
     const response = await documentClient.send(new ScanCommand(params));
-    console.log(response);
+    console.log('ScanCommand response: ', response);
     return response.Items ? response.Items as Product[] : undefined;
   }
 }
