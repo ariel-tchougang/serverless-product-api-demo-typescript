@@ -66,7 +66,7 @@ Test a single function by invoking it directly with a test event. An event is a 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-serverless-product-api-demo-typescript$ sam local invoke ProductApiFunction --event events/create-new-product-event.json
+serverless-product-api-demo-typescript$ sam local invoke ProductApiFunction --event events/create-new-product-event.json --env-vars env-vars.json
 ```
 
 The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
