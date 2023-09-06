@@ -5,10 +5,10 @@ import { DeleteProductService } from '../../../domain/services/DeleteProductServ
 import { FindProductByIdService } from '../../../domain/services/FindProductByIdService';
 import { GetAllProductsService } from '../../../domain/services/GetAllProductsService';
 import { UpdateProductService } from '../../../domain/services/UpdateProductService';
-import { InMemoryProductRepository } from '../../out/InMemoryProductRepository';
+import { DynamoDBRepository } from '../../out/DynamoDBRepository';
 import { productApiHandlerWrapper } from './productApiHandlerWrapper';
 
-const repository = new InMemoryProductRepository();
+const repository = new DynamoDBRepository();
 const findProductByIdQuery = new FindProductByIdService(repository);
 const getAllProductsQuery = new GetAllProductsService(repository);
 const createNewProductUseCase = new CreateNewProductService(repository);

@@ -12,8 +12,16 @@ Globals:
     MemorySize: 128
     Runtime: nodejs18.x
     Tracing: Active
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref DynamoDBTableName
   Api:
-    TracingEnabled: true
+    TracingEnabled: True
+
+Parameters:
+  DynamoDBTableName:
+    Type: String
+    Description: Name of the DynamoDB table to be created by this template
 Resources:              
   LambdaLoggingPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -69,6 +77,9 @@ Resources:
       Handler: src/adapters/in/handlers/productApiHandler.productApiHandler
       Description: A simple Product Api CRUD function
       Role: !GetAtt ProductApiFunctionRole.Arn
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref DynamoDBTableName
       Architectures:
       - x86_64
       Events:
@@ -105,6 +116,17 @@ Resources:
         Sourcemap: true
         EntryPoints:
         - src/adapters/in/handlers/productApiHandler.ts
+        External:
+          - "@aws-sdk/lib-dynamodb"
+          - "@aws-sdk/client-dynamodb"
+  
+  DynamoDbTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      PrimaryKey:
+        Name: id
+        Type: String
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
@@ -124,11 +146,14 @@ Outputs:
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ProductApi:
-    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Description: API Gateway endpoint URL for Prod stage for Product Api function
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/products/"
   ProductApiFunction:
     Description: Hello World Lambda Function ARN
     Value: !GetAtt ProductApiFunction.Arn
   ProductApiFunctionRole:
     Description: Implicit IAM Role created for Product Api function
-    Value: !GetAtt ProductApiFunctionRole.Arn
+    Value: !GetAtt ProductApiFunctionRole.Arn    
+  ProductApiTable:
+    Description: "Product Api table"
+    Value: !Ref DynamoDBTableName
