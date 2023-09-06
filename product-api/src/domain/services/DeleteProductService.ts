@@ -7,9 +7,9 @@ import { DeleteProductServiceException } from "../exceptions/ServiceExceptions";
 export class DeleteProductService implements DeleteProductUseCase {
     constructor(private readonly deleteProductPort: DeleteProductPort) {}
     
-    execute(id: string): void {
+    async execute(id: string): Promise<void> {
       try {
-        this.deleteProductPort.delete(id);
+        await this.deleteProductPort.delete(id);
       } catch (error) {
         const e = error as Error;
         throw new DeleteProductServiceException(`${e.name}: ${e.message}`);

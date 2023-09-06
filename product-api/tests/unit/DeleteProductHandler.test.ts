@@ -1,8 +1,8 @@
 // tests/unit/DeleteProductHandler.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
-
 import { deleteProductEvent } from "./domain/mocks/ports/in/delete-product-event";
 import { DeleteProductService } from '../../src/domain/services/DeleteProductService';
 import { AlwaysOkDeleteProductPort, ErrorOnDeleteProductPort } from './domain/mocks/ports/out/DeleteProductPort';

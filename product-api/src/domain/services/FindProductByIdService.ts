@@ -9,12 +9,12 @@ import { Product } from "../models/Product";
 export class FindProductByIdService implements FindProductByIdQuery {
     constructor(private readonly findProductByIdPort: FindProductByIdPort) {}
   
-    execute(id: string): Product {
+    async execute(id: string): Promise<Product> {
 
       let product;
       
       try {
-        product = this.findProductByIdPort.findById(id);
+        product = await this.findProductByIdPort.findById(id);
       } catch (error) {
         const e = error as Error;
         throw new FindProductByIdServiceException(`${e.name}: ${e.message}`);

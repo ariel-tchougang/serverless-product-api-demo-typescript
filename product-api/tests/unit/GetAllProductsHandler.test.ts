@@ -1,10 +1,9 @@
 // tests/unit/GetAllProductsHandler.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
-
 import { GetAllProductsService } from "../../src/domain/services/GetAllProductsService";
-
 import { getAllProductsEvent } from "./domain/mocks/ports/in/get-all-products-event";
 import { Product } from "../../src/domain/models/Product";
 import { AlwaysGetAllProductsPort, EmptyGetAllProductsPort, UndefinedGetAllProductsPort, ErrorOnGetAllProductsPort } from './domain/mocks/ports/out/GetAllProductsPort';

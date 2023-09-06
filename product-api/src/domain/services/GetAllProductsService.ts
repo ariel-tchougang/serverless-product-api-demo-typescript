@@ -8,11 +8,11 @@ import { Product } from "../models/Product";
 export class GetAllProductsService implements GetAllProductsQuery {
     constructor(private readonly getAllProductsPort: GetAllProductsPort) {}
   
-    execute(): Product[] {
+    async execute(): Promise<Product[]> {
         let products: Product[] | undefined = [];
       
         try {
-            products = this.getAllProductsPort.findAll();
+            products = await this.getAllProductsPort.findAll();
         } catch (error) {
             const e = error as Error;
             throw new GetAllProductsServiceException(`${e.name}: ${e.message}`);

@@ -1,11 +1,10 @@
 // tests/unit/FindProductByIdHandler.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
-
 import { AlwaysFindProductByIdPort, NeverFindProductByIdPort, ErrorOnFindProductByIdPort } from "./domain/mocks/ports/out/FindProductByIdPort";
 import { FindProductByIdService } from "../../src/domain/services/FindProductByIdService";
-
 import { findProductByIdEvent } from "./domain/mocks/ports/in/find-product-by-id-event";
 import { Product } from "../../src/domain/models/Product";
 

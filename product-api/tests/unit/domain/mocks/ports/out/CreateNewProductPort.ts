@@ -4,14 +4,14 @@ import { CreateNewProductPort } from "../../../../../../src/domain/ports/out/Per
 import { Product } from "../../../../../../src/domain/models/Product";
 
 export class AlwaysCreateNewProductPort implements CreateNewProductPort {
-    create(product: Product): Product { 
+    async create(product: Product): Promise<Product> {
       return { id: "someId", name: product.name };
     }
 }
   
 export class ErrorOnCreateNewProductPort implements CreateNewProductPort {
-  create(product: Product): Product {
-    throw new Error("Unexpected error on create new product");
+  async create(product: Product): Promise<Product> {
+    return Promise.reject("Error on create new product");
   }
 }
   

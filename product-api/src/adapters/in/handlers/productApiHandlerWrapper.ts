@@ -13,7 +13,7 @@ export const productApiHandlerWrapper = (
   updateProductUseCase: UpdateProductUseCase,
   deleteProductUseCase: DeleteProductUseCase
 ) => {
-  return (event: APIGatewayProxyEvent, context: Context, callback: APIGatewayProxyCallback): void => {
+  return async (event: APIGatewayProxyEvent, context: Context, callback: APIGatewayProxyCallback): Promise<void> => {
     const method = event.httpMethod.toUpperCase();
     const pathParameters = event.pathParameters;
     const body = event.body ? JSON.parse(event.body) : {};
@@ -22,24 +22,24 @@ export const productApiHandlerWrapper = (
         switch (method) {
           case 'GET':
             if (pathParameters && pathParameters.id) {
-              callback(null, handleFindProductById(findProductByIdQuery, pathParameters.id));
+              callback(null, await handleFindProductById(findProductByIdQuery, pathParameters.id));
             } else {
-              callback(null, handleGetAllProducts(getAllProductsQuery));
+              callback(null, await handleGetAllProducts(getAllProductsQuery));
             }
             break;
           case 'POST':
-            callback(null, handleCreateNewProduct(createNewProductUseCase, body));
+            callback(null, await handleCreateNewProduct(createNewProductUseCase, body));
             break;
           case 'PUT':
             if (pathParameters && pathParameters.id) {
-              callback(null, handleUpdateProduct(updateProductUseCase, pathParameters.id, body));
+              callback(null, await handleUpdateProduct(updateProductUseCase, pathParameters.id, body));
             } else {
               callback(null, handleBadRequestException('Bad request - missing product id'));
             }           
             break;
           case 'DELETE':
             if (pathParameters && pathParameters.id) {
-              callback(null, handleDeleteProduct(deleteProductUseCase, pathParameters.id));
+              callback(null, await handleDeleteProduct(deleteProductUseCase, pathParameters.id));
             } else {                
               callback(null, handleBadRequestException('Bad request - missing product id'));
             }
@@ -59,9 +59,9 @@ export const productApiHandlerWrapper = (
   };
 };
 
-const handleFindProductById = (findProductByIdQuery: FindProductByIdQuery, id: string): any => {
+const handleFindProductById = async (findProductByIdQuery: FindProductByIdQuery, id: string): Promise<any> => {
     try {
-        const product = findProductByIdQuery.execute(id);
+        const product = await findProductByIdQuery.execute(id);
         return {
             statusCode: 200,
             body: JSON.stringify(product)
@@ -76,9 +76,9 @@ const handleFindProductById = (findProductByIdQuery: FindProductByIdQuery, id: s
     }
 }
 
-const handleGetAllProducts = (getAllProductsQuery: GetAllProductsQuery): any => {
+const handleGetAllProducts = async (getAllProductsQuery: GetAllProductsQuery): Promise<any> => {
     try {
-        const products = getAllProductsQuery.execute();
+        const products = await getAllProductsQuery.execute();
         return {
             statusCode: 200,
             body: JSON.stringify(products)
@@ -89,9 +89,9 @@ const handleGetAllProducts = (getAllProductsQuery: GetAllProductsQuery): any => 
     }
 }
 
-const handleDeleteProduct = (deleteProductUseCase: DeleteProductUseCase, id: string): any => {
+const handleDeleteProduct = async (deleteProductUseCase: DeleteProductUseCase, id: string): Promise<any> => {
     try {
-        deleteProductUseCase.execute(id);
+        await deleteProductUseCase.execute(id);
         return {
             statusCode: 200,
             body: JSON.stringify({})
@@ -102,14 +102,14 @@ const handleDeleteProduct = (deleteProductUseCase: DeleteProductUseCase, id: str
     }
 }
 
-const handleUpdateProduct = (updateProductUseCase: UpdateProductUseCase, id: string, body: any): any => {
+const handleUpdateProduct = async (updateProductUseCase: UpdateProductUseCase, id: string, body: any): Promise<any> => {
     try {
         if (!body || !body.name) {
             return handleBadRequestException('Bad request - missing product name');
         }
 
         const product: Product = { id: '', name: body.name };
-        updateProductUseCase.execute(id, product);
+        await updateProductUseCase.execute(id, product);
         return {
             statusCode: 200,
             body: JSON.stringify({ id: id, name: body.name })
@@ -124,14 +124,14 @@ const handleUpdateProduct = (updateProductUseCase: UpdateProductUseCase, id: str
     }
 }
 
-const handleCreateNewProduct = (createNewProductUseCase: CreateNewProductUseCase, body: any): any => {
+const handleCreateNewProduct = async (createNewProductUseCase: CreateNewProductUseCase, body: any): Promise<any> => {
     try {
         if (!body || !body.name) {
             return handleBadRequestException('Bad request - missing product name');
         }
 
         const product: Product = { id: '', name: body.name };
-        const newProduct = createNewProductUseCase.execute(product);
+        const newProduct = await createNewProductUseCase.execute(product);
         return {
             statusCode: 201,
             body: JSON.stringify(newProduct)

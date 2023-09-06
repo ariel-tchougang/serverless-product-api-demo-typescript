@@ -1,5 +1,6 @@
 // tests/unit/domain/services/FindProductByIdService.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { AlwaysFindProductByIdPort, NeverFindProductByIdPort, ErrorOnFindProductByIdPort } from "../mocks/ports/out/FindProductByIdPort";
 import { FindProductByIdService } from "../../../../src/domain/services/FindProductByIdService";
 import { ProductNotFoundException } from "../../../../src/domain/exceptions/ProductNotFoundException";
@@ -23,24 +24,24 @@ describe("FindProductByIdService", () => {
     jest.clearAllMocks();
   });
 
-  test("should return product when product ID exists", () => {
-    const product = alwaysFindProductByIdService.execute("someId");
+  test("should return product when product ID exists", async () => {
+    const product = await alwaysFindProductByIdService.execute("someId");
     expect(product).toBeDefined();
     expect(product?.id).toBe("someId");      
     expect(alwaysFindProductByIdPort.findById).toBeCalledTimes(1);
   });
 
-  test("should throw ProductNotFoundException when product ID doesn't exist", () => {
-    expect(() => {
-      neverFindProductByIdService.execute("someId");
-    }).toThrow(ProductNotFoundException);
+  test("should throw ProductNotFoundException when product ID doesn't exist", async () => {
+    await expect(async () => {
+      await neverFindProductByIdService.execute("someId");
+    }).rejects.toThrow(ProductNotFoundException);
     expect(neverFindProductByIdPort.findById).toBeCalledTimes(1);
   });
 
-  test("should throw FindProductByIdServiceException when findById operation fails", () => {
-    expect(() => {
-      errorOnFindProductByIdService.execute("someId");
-    }).toThrow(FindProductByIdServiceException);    
+  test("should throw FindProductByIdServiceException when findById operation fails", async () => {
+    await expect(async () => {
+      await errorOnFindProductByIdService.execute("someId");
+    }).rejects.toThrow(FindProductByIdServiceException);    
     expect(errorOnFindProductByIdPort.findById).toBeCalledTimes(1);
   });
 });

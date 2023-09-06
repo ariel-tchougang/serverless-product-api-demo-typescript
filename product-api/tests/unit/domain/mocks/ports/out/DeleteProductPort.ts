@@ -3,12 +3,14 @@
 import { DeleteProductPort } from "../../../../../../src/domain/ports/out/Persistence";
 
 export class AlwaysOkDeleteProductPort implements DeleteProductPort {
-    delete(id: string): void { }
+    async delete(id: string): Promise<void> { 
+      await new Promise(resolve => setTimeout(resolve, 100)); 
+    }
 }
   
 export class ErrorOnDeleteProductPort implements DeleteProductPort {
-  delete(id: string): void {
-    throw new Error("Unexpected error on delete product");
+  async delete(id: string): Promise<void> {
+    return Promise.reject("Error on delete product");
   }
 }
   

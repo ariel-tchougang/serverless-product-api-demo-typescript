@@ -1,5 +1,6 @@
 // tests/unit/domain/services/UpdateProductService.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { AlwaysUpdateProductPort,  UndefinedUpdateProductPort, ErrorOnUpdateProductPort } from "../mocks/ports/out/UpdateProductPort";
 import { UpdateProductService } from "../../../../src/domain/services/UpdateProductService";
 import { ProductNotFoundException } from "../../../../src/domain/exceptions/ProductNotFoundException";
@@ -23,24 +24,24 @@ describe("UpdateProductService", () => {
     jest.clearAllMocks();
   });
 
-  test("should return product list", () => {
-    expect(() => {
-        alwaysUpdateProductService.execute("someId", { id: "someId", name: "someName",});
-      }).not.toThrow();      
-      expect(alwaysUpdateProductPort.update).toBeCalledTimes(1);
+  test("should return product list", async () => {
+    await expect(async () => {
+      await alwaysUpdateProductService.execute("someId", { id: "someId", name: "someName",});
+    }).not.toThrow();      
+    expect(alwaysUpdateProductPort.update).toBeCalledTimes(1);
   });
 
-  test("should throw ProductNotFoundException when product ID doesn't exist", () => {
-    expect(() => {
-        undefinedUpdateProductService.execute("someId", { id: "someId", name: "someName",});
-      }).toThrow(ProductNotFoundException);
-      expect(undefinedUpdateProductPort.update).toBeCalledTimes(1);
+  test("should throw ProductNotFoundException when product ID doesn't exist", async () => {
+    await expect(async () => {
+      await undefinedUpdateProductService.execute("someId", { id: "someId", name: "someName",});
+    }).rejects.toThrow(ProductNotFoundException);
+    expect(undefinedUpdateProductPort.update).toBeCalledTimes(1);
   });
 
-  test("should throw UpdateProductServiceException when update operation fails", () => {
-    expect(() => {
-      errorOnUpdateProductService.execute("someId", { id: "someId", name: "someName",});
-    }).toThrow(UpdateProductServiceException);    
+  test("should throw UpdateProductServiceException when update operation fails", async () => {
+    await expect(async () => {
+      await errorOnUpdateProductService.execute("someId", { id: "someId", name: "someName",});
+    }).rejects.toThrow(UpdateProductServiceException);    
     expect(errorOnUpdateProductPort.update).toBeCalledTimes(1);
   });
 });

@@ -1,5 +1,6 @@
 // tests/unit/CreateNewProductHandler.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
 

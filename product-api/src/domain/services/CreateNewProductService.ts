@@ -9,10 +9,9 @@ import { Product } from "../models/Product";
 export class CreateNewProductService implements CreateNewProductUseCase {
   constructor(private readonly createNewProductPort: CreateNewProductPort) {}
   
-  execute(product: Product): Product {
-
+  async execute(product: Product): Promise<Product> {
     try {
-      return this.createNewProductPort.create({id: uuidv4(), "name": product.name});
+      return await this.createNewProductPort.create({id: uuidv4(), "name": product.name});
     } catch (error) {
       const e = error as Error;
       throw new CreateNewProductServiceException(`${e.name}: ${e.message}`);

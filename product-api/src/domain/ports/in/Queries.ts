@@ -3,9 +3,9 @@
 import { Product } from "../../models/Product";
 
 export interface FindProductByIdQuery {
-    execute(id: string): Product | undefined;
+    execute(id: string): Promise<Product>;
 }
 
 export interface GetAllProductsQuery {
-    execute(): Product[] ;
+    execute(): Promise<Product[]>;
 }

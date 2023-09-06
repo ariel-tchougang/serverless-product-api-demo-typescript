@@ -4,25 +4,26 @@ import { Product } from "../../../../../../src/domain/models/Product";
 import { GetAllProductsPort } from "../../../../../../src/domain/ports/out/Persistence";
 
 export class AlwaysGetAllProductsPort implements GetAllProductsPort {
-  findAll(): Product[] | undefined {
+  async findAll(): Promise<Product[] | undefined> {
+    await new Promise(resolve => setTimeout(resolve, 100));
     return [{ id: "someId", name: "someName" }];
   }
 }
 
 export class EmptyGetAllProductsPort implements GetAllProductsPort {
-  findAll(): Product[] | undefined {
+  async findAll(): Promise<Product[] | undefined> {
     return [];
   }
 }
 
 export class UndefinedGetAllProductsPort implements GetAllProductsPort {
-  findAll(): Product[] | undefined {
+  async findAll(): Promise<Product[] | undefined> {
     return undefined;
   }
 }
 
 export class ErrorOnGetAllProductsPort implements GetAllProductsPort {
-  findAll(): Product[] | undefined {
-    throw new Error("Unexpected error on calling findAll");
+  async findAll(): Promise<Product[] | undefined> {
+    return Promise.reject("Unexpected error on calling findAll");
   }
 }

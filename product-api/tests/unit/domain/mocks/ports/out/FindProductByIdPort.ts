@@ -4,19 +4,19 @@ import { Product } from "../../../../../../src/domain/models/Product";
 import { FindProductByIdPort } from "../../../../../../src/domain/ports/out/Persistence";
 
 export class AlwaysFindProductByIdPort implements FindProductByIdPort {
-  findById(id: string): Product | undefined {
+  async findById(id: string): Promise<Product | undefined> {
     return { id: "someId", name: "someName" };
   }
 }
 
 export class NeverFindProductByIdPort implements FindProductByIdPort {
-  findById(id: string): Product | undefined {
-    return undefined;
+  async findById(id: string): Promise<Product | undefined> {
+   return undefined;
   }
 }
 
 export class ErrorOnFindProductByIdPort implements FindProductByIdPort {
-  findById(id: string): Product | undefined {
-    throw new Error("Unexpected error on calling findById");
+  async findById(id: string): Promise<Product | undefined> {
+    return Promise.reject("Unexpected error on calling findById");
   }
 }

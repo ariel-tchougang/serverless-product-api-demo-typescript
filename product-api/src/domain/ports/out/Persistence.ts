@@ -2,21 +2,21 @@
 import { Product } from "../../models/Product";
 
 export interface FindProductByIdPort {
-    findById(id: string): Product | undefined;
+    findById(id: string): Promise<Product | undefined>;
 }
   
 export interface GetAllProductsPort {
-    findAll(): Product[] | undefined;
+    findAll(): Promise<Product[] | undefined>;
 }
 
 export interface CreateNewProductPort {
-    create(product: Product): Product;
+    create(product: Product): Promise<Product>;
 }
 
 export interface UpdateProductPort {
-    update(id: string, product: Product): Product | undefined;
+    update(id: string, product: Product): Promise<Product | undefined>;
 }
 
 export interface DeleteProductPort {
-    delete(id: string): void;
+    delete(id: string): Promise<void>;
 }

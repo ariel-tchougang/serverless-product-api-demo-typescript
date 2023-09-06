@@ -9,12 +9,12 @@ import { Product } from "../models/Product";
 export class UpdateProductService implements UpdateProductUseCase {
     constructor(private readonly updateProductPort: UpdateProductPort) {}
   
-    execute(id: string, product: Product): void {
+    async execute(id: string, product: Product): Promise<void> {
 
       let result;
       
       try {
-        result = this.updateProductPort.update(id, product);
+        result = await this.updateProductPort.update(id, product);
       } catch (error) {
         const e = error as Error;
         throw new UpdateProductServiceException(`${e.name}: ${e.message}`);

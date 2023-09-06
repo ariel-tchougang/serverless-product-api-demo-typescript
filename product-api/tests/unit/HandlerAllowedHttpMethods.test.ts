@@ -1,8 +1,8 @@
 // tests/unit/HandlerAllowedHttpMethods.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
-
 import { findProductByIdEvent } from "./domain/mocks/ports/in/find-product-by-id-event";
 
 describe("Allowed http methods through productApiHandler", () => {

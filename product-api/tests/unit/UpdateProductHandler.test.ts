@@ -1,13 +1,12 @@
 // tests/unit/UpdateProductHandler.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { productApiHandlerWrapper } from '../../src/adapters/in/handlers/productApiHandlerWrapper';
 import { APIGatewayProxyEvent, Context, APIGatewayProxyCallback } from 'aws-lambda';
-
 import { updateProductEvent } from "./domain/mocks/ports/in/update-product-event";
 import { UpdateProductService } from '../../src/domain/services/UpdateProductService';
 import { AlwaysUpdateProductPort, UndefinedUpdateProductPort, ErrorOnUpdateProductPort } from './domain/mocks/ports/out/UpdateProductPort';
 import { Product } from '../../src/domain/models/Product';
-import { findProductByIdEvent } from './domain/mocks/ports/in/find-product-by-id-event';
 
 describe("UpdateProduct through productApiHandler", () => {
 

@@ -1,5 +1,6 @@
 // tests/unit/domain/services/GetAllProductsService.test.ts
 
+import { jest, test, expect, describe, beforeEach, } from "@jest/globals";
 import { AlwaysGetAllProductsPort, EmptyGetAllProductsPort, UndefinedGetAllProductsPort, ErrorOnGetAllProductsPort } from "../mocks/ports/out/GetAllProductsPort";
 import { GetAllProductsService } from "../../../../src/domain/services/GetAllProductsService";
 import { GetAllProductsServiceException } from "../../../../src/domain/exceptions/ServiceExceptions"
@@ -26,31 +27,31 @@ describe("GetAllProductsService", () => {
     jest.clearAllMocks();
   });
 
-  test("should return product list", () => {
-    const products = alwaysGetAllProductsService.execute();
+  test("should return product list", async () => {
+    const products = await alwaysGetAllProductsService.execute();
     expect(products).toBeDefined();
     expect(products.length).toBe(1);      
     expect(alwaysGetAllProductsPort.findAll).toBeCalledTimes(1);
   });
 
-  test("should return empty list when there are no products in the store", () => {
-    const products = emptyGetAllProductsService.execute();
+  test("should return empty list when there are no products in the store", async () => {
+    const products = await emptyGetAllProductsService.execute();
     expect(products).toBeDefined();
     expect(products.length).toBe(0); 
     expect(emptyGetAllProductsPort.findAll).toBeCalledTimes(1);
   });
 
-  test("should return empty list when product list is set to 'undefined'", () => {
-    const products = undefinedGetAllProductsService.execute();
+  test("should return empty list when product list is set to 'undefined'", async () => {
+    const products = await undefinedGetAllProductsService.execute();
     expect(products).toBeDefined();
     expect(products.length).toBe(0); 
     expect(undefinedGetAllProductsPort.findAll).toBeCalledTimes(1);
   });
 
-  test("should throw GetAllProductsServiceException when findAll operation fails", () => {
-    expect(() => {
-      errorOnGetAllProductsService.execute();
-    }).toThrow(GetAllProductsServiceException);    
+  test("should throw GetAllProductsServiceException when findAll operation fails", async () => {
+    await expect(async () => {
+      await errorOnGetAllProductsService.execute();
+    }).rejects.toThrow(GetAllProductsServiceException);    
     expect(errorOnGetAllProductsPort.findAll).toBeCalledTimes(1);
   });
 });
