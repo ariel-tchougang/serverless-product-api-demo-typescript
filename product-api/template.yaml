@@ -137,9 +137,6 @@ Resources:
         Sourcemap: true
         EntryPoints:
         - src/adapters/in/handlers/productApiHandler.ts
-        External:
-          - "@aws-sdk/lib-dynamodb"
-          - "@aws-sdk/client-dynamodb"
   
   DynamoDbTable:
     Type: AWS::Serverless::SimpleTable
