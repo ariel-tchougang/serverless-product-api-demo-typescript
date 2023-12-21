@@ -13,19 +13,19 @@
     "test": "npm run compile && npm run unit"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "aws-xray-sdk-core": "^3.5.3",
+    "uuid": "^9.0.0",
+    "@aws-sdk/client-dynamodb": "^3.405.0",
+    "@aws-sdk/lib-dynamodb": "^3.405.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-dynamodb": "^3.405.0",
-    "@aws-sdk/lib-dynamodb": "^3.405.0",
     "@types/aws-lambda": "^8.10.92",
     "@types/jest": "^29.5.4",
     "@types/node": "^18.11.4",
     "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
-    "aws-sdk": "^2.1451.0",
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.10",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",

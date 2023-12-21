@@ -3,10 +3,11 @@
 import { Product } from "../../domain/models/Product";
 import { ProductRepository } from "./ProductRepository";
 
+import * as AWSXRay from 'aws-xray-sdk-core';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { GetCommand, PutCommand, UpdateCommand, DeleteCommand, ScanCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const client = new DynamoDBClient({});
+const client = AWSXRay.captureAWSv3Client(new DynamoDBClient({}));
 const documentClient = DynamoDBDocumentClient.from(client);
 const tableName = process.env.TABLE_NAME || "";
 
