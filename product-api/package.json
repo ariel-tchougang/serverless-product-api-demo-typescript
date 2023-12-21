@@ -15,8 +15,8 @@
   "dependencies": {
     "aws-xray-sdk-core": "^3.5.3",
     "uuid": "^9.0.0",
-    "@aws-sdk/client-dynamodb": "^3.405.0",
-    "@aws-sdk/lib-dynamodb": "^3.405.0"
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
